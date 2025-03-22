@@ -48,6 +48,27 @@
             background-color: #ff6600;
             transform: scale(1.05);
         }
+
+        .audio-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 10px;
+        }
+        .audio-controls button {
+            background: #ff8c00;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        .audio-controls button:hover {
+            background: #ff6600;
+        }
     </style>
 </head>
 <body>
@@ -56,6 +77,14 @@
         <button id="actionButton" class="next-btn" onclick="nextImage()">Next</button>
     </div>
 
+    <audio id="bg-music" loop>
+        <source src="bg.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="audio-controls">
+        <button id="toggle-music">🔊 Play Music</button>
+    </div>
+    
     <script>
         const images = ["Intro.png", "Title.png", "Topic.png"];
         let currentIndex = 0;
@@ -74,6 +103,21 @@
                 }
             }
         }
+    </script>
+
+<script>
+    const bgMusic = document.getElementById('bg-music');
+    const toggleMusicBtn = document.getElementById('toggle-music');
+
+    toggleMusicBtn.addEventListener('click', () => {
+        if (bgMusic.paused) {
+            bgMusic.play();
+            toggleMusicBtn.textContent = '🔇 Mute Music';
+        } else {
+            bgMusic.pause();
+            toggleMusicBtn.textContent = '🔊 Play Music';
+        }
+    });
     </script>
 </body>
 </html>
