@@ -364,7 +364,7 @@
             <div class="top-display">
                 <span class="total-score">0</span>
             </div>
-            
+
             <div style="position: absolute; top: 20px; left: 20px; color: white; font-size: 24px; font-weight: bold;" class="current-player">
                 Player 1's Turn
             </div>
@@ -396,7 +396,6 @@
     <audio id="wrong-sound">
         <source src="wrong.mp3" type="audio/mpeg">
     </audio>
-
 
     <script>
         // Handle intro screen transition
@@ -559,8 +558,9 @@
             }, 250);
         }
 
-        // Modify the X button functionality
+        // X buttons functionality
         const xButtons = document.querySelectorAll('.x-button');
+        let xCount = 0;
 
         xButtons.forEach(button => {
             button.addEventListener('click', () => {
@@ -660,7 +660,7 @@
             }
         }
 
-        // Update the reset game function
+        // Reset game function
         function resetGame() {
             const panels = document.querySelectorAll('.answer-panel');
             panels.forEach(panel => {
@@ -672,15 +672,8 @@
             });
             
             totalScore = 0;
-            roundScore = 0;
             totalScoreDisplay.textContent = '0';
-            player1Strikes = 0;
-            player2Strikes = 0;
-            player1Score = 0;
-            player2Score = 0;
-            currentPlayer = 1;
-            canSteal = false;
-            updatePlayerDisplay();
+            xCount = 0;
         }
 
         // Add reset functionality to the top display
@@ -688,7 +681,6 @@
     </script>
 
     <script>
-
     const correctSound = document.getElementById('correct-sound');
     const wrongSound = document.getElementById('wrong-sound');
 
@@ -707,11 +699,6 @@
             wrongSound.play();
         });
     });
-
-
-
-
-
     </script>
 </body>
 </html>
