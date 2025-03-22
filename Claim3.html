@@ -603,7 +603,7 @@
                     }
                 } else if (currentPlayer === 2 && !canSteal && player2Strikes < 3) {
                     // Regular turn (after successful steal or starting turn)
-                    const audio = new Audio('https://www.myinstants.com/media/sounds/family-feud-strike.mp3');
+                    const audio = new Audio('./wrong.mp3');
                     audio.play();
                     button.style.backgroundColor = 'red';
                     player2Strikes++;
@@ -622,7 +622,7 @@
                     }
                 } else if (currentPlayer === 1 && canSteal && player1Strikes < 1) {
                     // Player 1's stealing attempt - only one strike allowed during steal
-                    const audio = new Audio('https://www.myinstants.com/media/sounds/family-feud-strike.mp3');
+                    const audio = new Audio('./wrong.mp3');
                     audio.play();
                     button.style.backgroundColor = 'red';
                     player1Strikes++;
