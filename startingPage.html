@@ -119,5 +119,14 @@
         }
     });
     </script>
+
+<script>
+    window.onload = function() {
+        // Clear any existing scores when starting a new game
+        localStorage.removeItem('player1TotalScore');
+        localStorage.removeItem('player2TotalScore');
+        console.log('Cleared stored scores');
+    };
+</script>
 </body>
 </html>

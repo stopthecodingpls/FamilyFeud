@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Scores - Family Feud</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url('background_img.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+        }
+
+        .game-board {
+            position: relative;
+            width: 700px;
+            height: 400px;
+            background-color: #ff8c00;
+            border-radius: 40px;
+            border: 8px solid #000;
+            box-shadow: 0 0 0 4px #fff, 0 0 0 12px #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+            padding: 20px;
+        }
+
+        .dot-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: inherit;
+            background-image: radial-gradient(circle, #ff8c00 1px, transparent 0px), 
+                              radial-gradient(circle, rgba(0,0,0,0.5) 1px, transparent 0px);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            z-index: -1;
+        }
+
+        h1 {
+            color: #ffcc00;
+            font-size: 48px;
+            margin-bottom: 40px;
+            text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+        }
+
+        .player-score {
+            font-size: 36px;
+            margin: 20px 0;
+            background: linear-gradient(to right, #1e5799 0%, #7db9e8 50%, #1e5799 100%);
+            padding: 15px 30px;
+            border-radius: 10px;
+            border: 2px solid #fff;
+            width: 80%;
+            text-align: center;
+        }
+
+        .winner {
+            color: #ffcc00;
+            font-size: 42px;
+            margin: 40px 0;
+            text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .play-again {
+            margin-top: 90px;
+            padding: 15px 30px;
+            font-size: 24px;
+            background-color: #ff8c00;
+            color: white;
+            border: 4px solid #fff;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 0 0 2px #000;
+            transition: all 0.3s ease;
+        }
+
+        .play-again:hover {
+            background-color: #ff6600;
+            transform: scale(1.05);
+        }
+
+        .bottom-logo {
+            position: absolute;
+            bottom: -30px;
+            width: 180px;
+            height: 80px;
+            background-image: radial-gradient(ellipse, #1e5799 60%, #ff8c00 60%);
+            border: 4px solid #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 0 4px #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+        }
+
+        .bottom-logo-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffcc00;
+            text-align: center;
+            text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+            line-height: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-board">
+        <div class="dot-pattern"></div>
+        <h1>Final Scores</h1>
+        <div class="player-score" id="player1-score"></div>
+        <div class="player-score" id="player2-score"></div>
+        <div class="winner" id="winner-display"></div>
+        <button class="play-again">
+            Play Again
+        </button>
+        <div class="bottom-logo">
+            <div class="bottom-logo-text">FAMILY<br>FEUD</div>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            // Get the final accumulated scores
+            const player1TotalScore = parseInt(localStorage.getItem('player1TotalScore')) || 0;
+            const player2TotalScore = parseInt(localStorage.getItem('player2TotalScore')) || 0;
+
+            console.log('Final total scores:', {player1TotalScore, player2TotalScore});
+            
+            // Display the scores
+            document.getElementById('player1-score').textContent = `Left side: ${player1TotalScore} points`;
+            document.getElementById('player2-score').textContent = `Right side: ${player2TotalScore} points`;
+
+            // Determine and display the winner
+            const winnerDisplay = document.getElementById('winner-display');
+            if (player1TotalScore > player2TotalScore) {
+                winnerDisplay.textContent = 'Left side Wins!';
+            } else if (player2TotalScore > player1TotalScore) {
+                winnerDisplay.textContent = 'Right side Wins!';
+            } else {
+                winnerDisplay.textContent = "It's a Tie!";
+            }
+
+            // Add click handler for Play Again button
+            document.querySelector('.play-again').addEventListener('click', function() {
+                // Clear the scores from localStorage when starting a new game
+                localStorage.removeItem('player1TotalScore');
+                localStorage.removeItem('player2TotalScore');
+                window.location.href = 'startingPage.html';
+            });
+        };
+    </script>
+</body>
+</html> 
