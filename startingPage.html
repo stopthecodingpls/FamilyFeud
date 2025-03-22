@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Navigation</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000;
+        }
+        .container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .next-btn, .start-btn {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            padding: 12px 40px;
+            background-color: #ff8c00;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+            transition: all 0.3s ease;
+            z-index: 1001;
+        }
+
+        .start-btn {
+            bottom: 19.5%;
+            right: 45.5%;
+        }
+        .next-btn:hover, .start-btn:hover {
+            background-color: #ff6600;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img id="displayImage" src="Intro.png" alt="Intro">
+        <button id="actionButton" class="next-btn" onclick="nextImage()">Next</button>
+    </div>
+
+    <script>
+        const images = ["Intro.png", "Title.png", "Topic.png"];
+        let currentIndex = 0;
+
+        function nextImage() {
+            if (currentIndex < images.length - 1) {
+                currentIndex++;
+                document.getElementById("displayImage").src = images[currentIndex];
+                
+                if (currentIndex === images.length - 1) {
+                    let button = document.getElementById("actionButton");
+                    button.textContent = "Start";
+                    button.classList.remove("next-btn");
+                    button.classList.add("start-btn");
+                    button.onclick = function() { window.location.href = "Claim1.html"; };
+                }
+            }
+        }
+    </script>
+</body>
+</html>

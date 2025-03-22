@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Feud Game Board</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url('background_img.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Intro Screen Styles */
+        .intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            transition: opacity 0.5s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .intro-image-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .intro-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .next-button {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            padding: 12px 40px;
+            background-color: #ff8c00;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+            transition: all 0.3s ease;
+            z-index: 1001;
+        }
+
+        .next-button:hover {
+            background-color: #ff6600;
+            transform: scale(1.05);
+        }
+
+        .proceed-button {
+            display: none;
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            padding: 12px 40px;
+            background-color: #ff8c00;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+            transition: all 0.3s ease;
+            z-index: 1001;
+        }
+
+        .proceed-button:hover {
+            background-color: #ff6600;
+            transform: scale(1.05);
+        }
+
+        .hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Game Board Styles */
+        .game-board-container {
+            position: relative;
+            width: 900px;
+            height: 500px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .game-visible {
+            opacity: 1;
+        }
+
+        .game-board {
+            position: relative;
+            width: 700px;
+            height: 400px;
+            background-color: #ff8c00;
+            border-radius: 40px;
+            border: 8px solid #000;
+            box-shadow: 0 0 0 4px #fff, 0 0 0 12px #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+        }
+
+        .side-extension {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-color: #ff8c00;
+            border: 8px solid #000;
+            box-shadow: 0 0 0 4px #fff, 0 0 0 12px #000;
+            z-index: 0;
+        }
+
+        .left-extension {
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            border-radius: 15px 0 0 15px;
+            border-right: none;
+        }
+
+        .right-extension {
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            border-radius: 0 15px 15px 0;
+            border-left: none;
+        }
+
+        .dot-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: inherit;
+            background-image: radial-gradient(circle, #ff8c00 1px, transparent 0px), 
+                              radial-gradient(circle, rgba(0,0,0,0.5) 1px, transparent 0px);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            z-index: -1;
+        }
+
+        .top-display {
+            position: absolute;
+            top: -30px;
+            width: 120px;
+            height: 70px;
+            background: linear-gradient(to bottom, #1e5799 0%, #7db9e8 100%);
+            border: 4px solid #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 0 4px #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            z-index: 2;
+        }
+
+        .logo-text {
+            font-size: 14px;
+            font-weight: bold;
+            color: #ffcc00;
+            text-align: center;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+        }
+
+        .answers-container {
+            width: 500px;
+            height: 280px;
+            background-color: #000;
+            border-radius: 10px;
+            padding: 10px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .answer-panel {
+            background: linear-gradient(to right, #1e5799 0%, #7db9e8 50%, #1e5799 100%);
+            border: 2px solid #fff;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px;
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .answer-panel:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .answer-number {
+            position: absolute;
+            font-size: 36px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            z-index: 2;
+        }
+
+        .answer-content {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            align-items: center;
+            justify-content: space-between;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .answer-text {
+            flex-grow: 1;
+            text-align: left;
+            padding-left: 15px;
+            font-size: 18px;
+        }
+
+        .answer-score {
+            width: 40px;
+            text-align: center;
+            background-color: #1e5799;
+            padding: 5px;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        .revealed .answer-number {
+            display: none;
+        }
+
+        .revealed .answer-content {
+            opacity: 1;
+        }
+
+        .bottom-logo {
+            position: absolute;
+            bottom: -30px;
+            width: 180px;
+            height: 80px;
+            background-image: radial-gradient(ellipse, #1e5799 60%, #ff8c00 60%);
+            border: 4px solid #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 0 4px #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+        }
+
+        .bottom-logo-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffcc00;
+            text-align: center;
+            text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+            line-height: 0.9;
+        }
+
+        .x-buttons {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 3;
+        }
+
+        .x-button {
+            width: 40px;
+            height: 40px;
+            background-color: #ff8c00;
+            border: 3px solid #fff;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 0 0 2px #000;
+            cursor: pointer;
+        }
+
+        .x-button:hover {
+            background-color: #ff6600;
+        }
+
+        .total-score {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        /* Flip animation */
+        .flipping {
+            animation: flip 0.5s;
+        }
+
+        @keyframes flip {
+            0% { transform: rotateY(0deg); }
+            50% { transform: rotateY(90deg); }
+            100% { transform: rotateY(0deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Intro Screen -->
+    <div class="intro-screen">
+        <div class="intro-image-container">
+            <img src="Claim 4.png" alt="Family Feud Claim" class="intro-image">
+        </div>
+        <button class="next-button">NEXT</button>
+    </div>
+
+    <!-- Game Board -->
+    <div class="game-board-container">
+        <div class="side-extension left-extension">
+            <div class="dot-pattern"></div>
+        </div>
+        
+        <div class="game-board">
+            <div class="dot-pattern"></div>
+            <div class="top-display">
+                <span class="total-score">0</span>
+            </div>
+            
+            <div class="answers-container">
+                <!-- Answer panels will be generated by JavaScript -->
+            </div>
+            
+            <div class="bottom-logo">
+                <div class="bottom-logo-text">FAMILY<br>FEUD</div>
+            </div>
+        </div>
+        
+        <div class="side-extension right-extension">
+            <div class="dot-pattern"></div>
+        </div>
+        
+    </div>
+    <div class="x-buttons">
+        <div class="x-button">X</div>
+        <div class="x-button">X</div>
+        <div class="x-button">X</div>
+    </div>
+    <button class="proceed-button">Proceed</button>
+
+    <script>
+        // Handle intro screen transition
+        document.querySelector('.next-button').addEventListener('click', function() {
+            document.querySelector('.intro-screen').classList.add('hidden');
+            
+            setTimeout(() => {
+                document.querySelector('.game-board-container').classList.add('game-visible');
+                document.querySelector('.proceed-button').style.display = 'block';
+            }, 500);
+        });
+
+        document.querySelector('.proceed-button').addEventListener('click', function() {
+            window.location.href = 'Claim5.html';
+        });
+
+        // Sample answers and points for the game
+        const gameAnswers = [
+            { text: "Money", points: 35 },
+            { text: "Car", points: 27 },
+            { text: "House", points: 15 },
+            { text: "Vacation", points: 10 },
+            { text: "Jewelry", points: 8 },
+            { text: "Electronics", points: 5 },
+            { text: "Clothes", points: 3 },
+            { text: "Food", points: 2 }
+        ];
+
+        // Get the answers container
+        const answersContainer = document.querySelector('.answers-container');
+        const totalScoreDisplay = document.querySelector('.total-score');
+        let totalScore = 0;
+
+        // Create answer panels
+        for (let i = 0; i < 8; i++) {
+            const answerPanel = document.createElement('div');
+            answerPanel.className = 'answer-panel';
+            answerPanel.dataset.index = i;
+
+            // Create number display
+            const numberDisplay = document.createElement('div');
+            numberDisplay.className = 'answer-number';
+            numberDisplay.textContent = i + 1;
+            
+            // Create answer content (hidden initially)
+            const answerContent = document.createElement('div');
+            answerContent.className = 'answer-content';
+            
+            // Create answer text
+            const answerText = document.createElement('div');
+            answerText.className = 'answer-text';
+            answerText.textContent = gameAnswers[i].text;
+            
+            // Create answer score
+            const answerScore = document.createElement('div');
+            answerScore.className = 'answer-score';
+            answerScore.textContent = gameAnswers[i].points;
+            
+            // Append elements
+            answerContent.appendChild(answerText);
+            answerContent.appendChild(answerScore);
+            answerPanel.appendChild(numberDisplay);
+            answerPanel.appendChild(answerContent);
+            answersContainer.appendChild(answerPanel);
+            
+            // Add click event
+            answerPanel.addEventListener('click', revealAnswer);
+        }
+
+        // Function to reveal answer when clicked
+        function revealAnswer(event) {
+            const panel = event.currentTarget;
+            if (panel.classList.contains('revealed')) {
+                return; // Already revealed
+            }
+            
+            // Add flipping animation
+            panel.classList.add('flipping');
+            
+            setTimeout(() => {
+                // Reveal the answer
+                panel.classList.add('revealed');
+                
+                // Update total score
+                const index = parseInt(panel.dataset.index);
+                totalScore += gameAnswers[index].points;
+                totalScoreDisplay.textContent = totalScore;
+                
+                // Remove flipping class after animation completes
+                setTimeout(() => {
+                    panel.classList.remove('flipping');
+                }, 250);
+            }, 250);
+        }
+
+        // X buttons functionality
+        const xButtons = document.querySelectorAll('.x-button');
+        let xCount = 0;
+
+        xButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                if (xCount < 3) {
+                    const audio = new Audio('https://www.myinstants.com/media/sounds/family-feud-strike.mp3');
+                    audio.play();
+                    button.style.backgroundColor = 'red';
+                    xCount++;
+                }
+            });
+        });
+
+        // Reset game function
+        function resetGame() {
+            const panels = document.querySelectorAll('.answer-panel');
+            panels.forEach(panel => {
+                panel.classList.remove('revealed', 'flipping');
+            });
+            
+            xButtons.forEach(button => {
+                button.style.backgroundColor = '#ff8c00';
+            });
+            
+            totalScore = 0;
+            totalScoreDisplay.textContent = '0';
+            xCount = 0;
+        }
+
+        // Add reset functionality to the top display
+        document.querySelector('.top-display').addEventListener('click', resetGame);
+    </script>
+</body>
+</html>
