@@ -555,9 +555,9 @@
             const playerDisplay = document.querySelector('.current-player');
             if (canSteal) {
                 if (currentPlayer === 2) {
-                    playerDisplay.textContent = "Right side's Stealing Chance!";
+                    playerDisplay.innerHTML = "Right side's Stealing <br> Chance!";
                 } else {
-                    playerDisplay.textContent = "Left side's Stealing Chance!";
+                    playerDisplay.innerHTML= "Left side's Stealing <br> Chance!";
                 }
             } else {
                 playerDisplay.textContent = `${currentPlayer === 1 ? 'Left' : 'Right'} side's Turn`;
